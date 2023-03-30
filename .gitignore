@@ -1,0 +1,12 @@
+# Virtual Environment
+venv/
+.venv/
+\.venv\
+
+#Ignore excel/CSV files
+*.xlsx
+*.csv
+
+# Ignore cache files
+*.pyc
+__pycache__/
