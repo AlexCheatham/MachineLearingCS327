@@ -21,25 +21,27 @@ def clean_data(df):
     df = df.drop('Other_Sales', axis = 1)
     # Scale user score to out of 100
 
-    df['Publisher'] = map_publisher(df)
+    publishers = map_publisher(df)
     
+    publisher_list = df['Publisher'].tolist()
+    for i in range(len(publisher_list)):
+        publisher_list[i] = publishers[publisher_list[i]]
+    
+    df['Publisher'] = publisher_list
     df['User_Score'] = df['User_Score']*10
     #read mapped file and replace publisher with their id. You may want to first convert the publisher into lower case and then 
     #write the id.
     # Saves dataframe to excel spreadsheet
     df.to_excel("GameDataCleaned.xlsx")
 
-def main():
-    read_excel()
-
 def map_publisher(df):
     #plug in the csv creation and header part here, publisher and corresponding ID, here you will have a csv writer object obj
     #df=pd.read_excel(CleanedData2.xlsx)
     publisher=df['Publisher'].unique().tolist()
-    publisher_new=[x.lower() for x in publisher]  #case sensitive
+    #publisher_new=[x.lower() for x in publisher]  #case sensitive
     id_num=1
     dict_new={}
-    for i in publisher_new:
+    for i in publisher:
         if i not in dict_new:
             dict_new[i]=id_num
             id_num+=1
@@ -47,8 +49,9 @@ def map_publisher(df):
     #for i,v in dict_new.items():
     #    obj.writerow([i,v])
     return dict_new
-            
-        
-    
+
+def main():
+    read_excel()
+
 if __name__ == "__main__":
     main()
