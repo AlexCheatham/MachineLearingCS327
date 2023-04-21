@@ -91,7 +91,7 @@ def polynomial_regression(df, degree, num_splits):
         avg_poly += i
         count += 1
 
-    print(scores_poly)
+    #print(scores_poly)
     #print(count)
     avg_poly = avg_poly/count
     return avg_poly

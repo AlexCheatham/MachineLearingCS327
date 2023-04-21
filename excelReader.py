@@ -7,7 +7,7 @@ def read_excel():
 def clean_data(df):
     # Drop unneeded columns
     df = df.drop('Name', axis = 1)
-    df = df.drop('Genre', axis = 1)
+    #df = df.drop('Genre', axis = 1)
     df = df.drop('Developer', axis = 1)
     df = df.drop('Rating', axis = 1)
     
@@ -20,7 +20,12 @@ def clean_data(df):
     df = df.drop('JP_Sales', axis = 1)
     df = df.drop('Other_Sales', axis = 1)
     # Scale user score to out of 100
-
+    genres = map_genre(df)
+    genre_list = df['Genre'].tolist()
+    for i in range(len(genre_list)):
+        genre_list[i] = genres[genre_list[i]]
+    
+    df['Genre'] = genre_list
     publishers = map_publisher(df)
     
     publisher_list = df['Publisher'].tolist()
@@ -42,6 +47,22 @@ def map_publisher(df):
     id_num=1
     dict_new={}
     for i in publisher:
+        if i not in dict_new:
+            dict_new[i]=id_num
+            id_num+=1
+    #at this point, you will have a mapped dictionary
+    #for i,v in dict_new.items():
+    #    obj.writerow([i,v])
+    return dict_new
+
+def map_genre(df):
+    #plug in the csv creation and header part here, publisher and corresponding ID, here you will have a csv writer object obj
+    #df=pd.read_excel(CleanedData2.xlsx)
+    genre=df['Genre'].unique().tolist()
+    #publisher_new=[x.lower() for x in publisher]  #case sensitive
+    id_num=1
+    dict_new={}
+    for i in genre:
         if i not in dict_new:
             dict_new[i]=id_num
             id_num+=1
