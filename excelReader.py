@@ -8,7 +8,7 @@ def clean_data(df):
     # Drop unneeded columns
     df = df.drop('Name', axis = 1)
     #df = df.drop('Genre', axis = 1)
-    df = df.drop('Developer', axis = 1)
+    #df = df.drop('Developer', axis = 1)
     df = df.drop('Rating', axis = 1)
     
     df['Published_in_NA'] = df['NA_Sales'].apply(lambda x: 1 if x > 0 else 0)
@@ -26,6 +26,14 @@ def clean_data(df):
         genre_list[i] = genres[genre_list[i]]
     
     df['Genre'] = genre_list
+    
+    developers = map_developer(df)
+    developer_list = df['Developer'].tolist()
+    for i in range(len(developer_list)):
+        developer_list[i] = developers[developer_list[i]]
+    
+    df['Developer'] = developer_list
+    
     publishers = map_publisher(df)
     
     publisher_list = df['Publisher'].tolist()
@@ -63,6 +71,22 @@ def map_genre(df):
     id_num=1
     dict_new={}
     for i in genre:
+        if i not in dict_new:
+            dict_new[i]=id_num
+            id_num+=1
+    #at this point, you will have a mapped dictionary
+    #for i,v in dict_new.items():
+    #    obj.writerow([i,v])
+    return dict_new
+
+def map_developer(df):
+    #plug in the csv creation and header part here, publisher and corresponding ID, here you will have a csv writer object obj
+    #df=pd.read_excel(CleanedData2.xlsx)
+    Developer=df['Developer'].unique().tolist()
+    #publisher_new=[x.lower() for x in publisher]  #case sensitive
+    id_num=1
+    dict_new={}
+    for i in Developer:
         if i not in dict_new:
             dict_new[i]=id_num
             id_num+=1
