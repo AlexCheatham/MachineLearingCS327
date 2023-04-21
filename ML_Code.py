@@ -21,7 +21,7 @@ def get_df():
     return df
 
 def linear_regression(df, num_splits):
-    X1=df[["Year_of_Release", "Publisher", "Critic_Score", "Critic_Count", "User_Score", "User_Count", "Published_in_NA",
+    X1=df[["Year_of_Release", "Publisher", "Genre", "Critic_Score", "Critic_Count", "User_Score", "User_Count", "Published_in_NA",
     "Published_in_EU", "Published_in_JP", "Published_in_Other"]] #Sets up the dataframe 
     #Output label
     y=df['Global_Sales']
@@ -58,7 +58,7 @@ def linear_regression(df, num_splits):
     return avg
 
 def polynomial_regression(df, degree, num_splits):
-    X1=df[["Year_of_Release", "Publisher", "Critic_Score", "Critic_Count", "User_Score", "User_Count", "Published_in_NA",
+    X1=df[["Year_of_Release", "Publisher", "Genre", "Critic_Score", "Critic_Count", "User_Score", "User_Count", "Published_in_NA",
     "Published_in_EU", "Published_in_JP", "Published_in_Other"]] #Sets up the dataframe 
     #Output label
     y=df['Global_Sales']
@@ -97,7 +97,7 @@ def polynomial_regression(df, degree, num_splits):
     return avg_poly
 
 def Neural_Network(df):
-    X1=df[["Year_of_Release", "Publisher", "Critic_Score", "Critic_Count", "User_Score", "User_Count", "Published_in_NA",
+    X1=df[["Year_of_Release", "Publisher", "Genre", "Critic_Score", "Critic_Count", "User_Score", "User_Count", "Published_in_NA",
     "Published_in_EU", "Published_in_JP", "Published_in_Other"]] #Sets up the dataframe 
     #Output label
     y=df['Global_Sales']
@@ -118,7 +118,7 @@ def Neural_Network(df):
     print('R score is :', r2_score(y_test, preds))
 
 def KMeans_Clustering(df):
-    X=df[["Year_of_Release", "Publisher", "Critic_Score", "Critic_Count", "User_Score", "User_Count", "Published_in_NA",
+    X=df[["Year_of_Release", "Publisher", "Genre", "Critic_Score", "Critic_Count", "User_Score", "User_Count", "Published_in_NA",
     "Published_in_EU", "Published_in_JP", "Published_in_Other"]] #Sets up the dataframe 
     #Output label
     y=df['Global_Sales']
