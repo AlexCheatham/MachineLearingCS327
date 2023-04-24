@@ -13,6 +13,7 @@ import tensorflow as tf
 import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.utils import shuffle
+from scipy.stats import pearsonr
 
 def get_df():
     df=pd.read_excel("GameDataCleaned.xlsx")    #read file.
@@ -128,12 +129,34 @@ def KMeans_Clustering(df):
     game_kmeans = model.fit(X)
     print(game_kmeans.labels_)
 
+def Feature_Correlation(df):
+    #only dataframe that is a numeric value with equal length with global sales
+    X1=df[["Year_of_Release", "Critic_Score", "Critic_Count", "User_Score", "User_Count"]] #Sets up the dataframe 
+    #Output label
+    y=df['Global_Sales']
+
+    scaler = MinMaxScaler()
+    X = scaler.fit_transform(X1)
+
+    correlation_result_year = pearsonr(df["Year_of_Release"], y)
+    correlation_result_CS = pearsonr(df["Critic_Score"], y)
+    correlation_result_CC = pearsonr(df["Critic_Count"], y)
+    correlation_result_US = pearsonr(df["User_Score"], y)
+    correlation_result_UC = pearsonr(df["User_Count"], y)
+
+    print(correlation_result_year) 
+    print(correlation_result_CS) 
+    print(correlation_result_CC) 
+    print(correlation_result_US) 
+    print(correlation_result_UC)
+
 def main():
     df = get_df()
     print("Linear Regression: " + str(linear_regression(df, 5)))
     print("Polynomial Regression: " + str(polynomial_regression(df, 2, 5)))
     Neural_Network(df)
     KMeans_Clustering(df)
+    Feature_Correlation(df)
     #matplotlib works here, example of using it, this should open up a new window with the given graph
     # plt.scatter(df["Critic_Score"], df["Global_Sales"])
     # plt.xlabel("Critic Score")
