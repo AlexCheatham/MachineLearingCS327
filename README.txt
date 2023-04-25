@@ -6,3 +6,4 @@ python -m venv .venv
 
 requirements.txt holds all the requirements for code quality, make sure to install it once you have everything
 pip install -r requirements.txt
+pip install optuna
