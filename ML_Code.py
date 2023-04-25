@@ -14,6 +14,7 @@ import matplotlib.pyplot as plt
 from sklearn.cluster import KMeans
 from sklearn.utils import shuffle
 from scipy.stats import pearsonr
+import optuna
 
 def get_df():
     df=pd.read_excel("GameDataCleaned.xlsx")    #read file.
@@ -118,6 +119,39 @@ def Neural_Network(df):
     preds = model.predict(X_test_scaled) #use model to predict x test values
     print('R score is :', r2_score(y_test, preds))
 
+# #Objective function for Optuna from https://medium.com/optuna/using-optuna-to-optimize-tensorflow-hyperparameters-57b6d4d316a2
+# def objective(trial):
+#     classifier = create_classifier(trial)
+#     df = get_df()
+
+#     optuna_pruning_hook = optuna.integration.TensorFlowPruningHook(
+#         trial=trial,
+#         estimator=classifier,
+#         metric="accuracy",
+#         run_every_steps=50
+#     )
+
+#     train_spec = tf.estimator.TrainSpec(
+#         input_fn=, max_steps=1000, hooks=[optuna_pruning_hook]
+#     )
+
+#     eval_spec = tf.estimator.EvalSpec(input_fn=, start_delay_secs=0, throttle_secs=0)
+
+#     eval_results, _ = tf.estimator.train_and_evaluate(classifier, train_spec, eval_spec)
+
+#     return float(eval_results["accuracy"])
+
+# #Classifier function from Optuna from https://medium.com/optuna/using-optuna-to-optimize-tensorflow-hyperparameters-57b6d4d316a2
+# def create_classifier(trial):
+#     # We optimize the numbers of layers and their units.
+
+#     n_layers = trial.suggest_int("n_layers", 1, 3)
+#     hidden_units = []
+#     for i in range(n_layers):
+#         n_units = trial.suggest_int("n_units_l{}".format(i), 1, 128)
+#         hidden_units.append(n_units)
+
+
 def KMeans_Clustering(df):
     X=df[["Year_of_Release", "Publisher", "Genre", "Critic_Score", "Critic_Count", "User_Score", "User_Count", "Published_in_NA",
     "Published_in_EU", "Published_in_JP", "Published_in_Other"]] #Sets up the dataframe 
@@ -162,6 +196,25 @@ def main():
     # plt.xlabel("Critic Score")
     # plt.ylabel("Global Sales")
     # plt.show()
+
+    # #optuna analysis from https://medium.com/optuna/using-optuna-to-optimize-tensorflow-hyperparameters-57b6d4d316a2
+    # study = optuna.create_study(direction="maximize")
+    # study.optimize(objective, n_trials=25)
+    # pruned_trials = [t for t in study.trials if t.state == optuna.structs.TrialState.PRUNED]
+    # complete_trials = [t for t in study.trials if t.state == optuna.structs.TrialState.COMPLETE]
+    # print("Study statistics: ")
+    # print("  Number of finished trials: ", len(study.trials))
+    # print("  Number of pruned trials: ", len(pruned_trials))
+    # print("  Number of complete trials: ", len(complete_trials))
+
+    # print("Best trial:")
+    # trial = study.best_trial
+
+    # print("  Value: ", trial.value)
+
+    # print("  Params: ")
+    # for key, value in trial.params.items():
+    #     print("    {}: {}".format(key, value))
     
 if __name__ == "__main__":
     main()
