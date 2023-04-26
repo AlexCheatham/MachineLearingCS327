@@ -1,16 +1,24 @@
 import pandas as pd
 
-def read_excel():
-    df = pd.read_excel('CleanedData2.xlsx')
-    clean_data(df)
+def read_excel(name, outputName):
+    df = pd.read_excel(name)
+    clean_data(df, outputName)
 
-def clean_data(df):
+def clean_data(df, outputName):
     # Drop unneeded columns
     df = df.drop('Name', axis = 1)
     #df = df.drop('Genre', axis = 1)
     #df = df.drop('Developer', axis = 1)
-    df = df.drop('Rating', axis = 1)
+    #df = df.drop('Rating', axis = 1)
     
+    #COMMENT THIS OUT IF USING GAMEDATACLEANED=====================================
+    df['Story_Focus'] = df['Story Focus'].apply(lambda x: 1 if x == 'x' else 0)
+    df['Gameplay_Focus'] = df['Gameplay Focus'].apply(lambda x: 1 if x == 'x' else 0)
+    df['Series_Focus'] = df['Series'].apply(lambda x: 1 if x == 'x' else 0)
+    df = df.drop('Story Focus', axis = 1)
+    df = df.drop('Gameplay Focus', axis = 1)
+    df = df.drop('Series', axis = 1)
+    #===========================================================
     df['Published_in_NA'] = df['NA_Sales'].apply(lambda x: 1 if x > 0 else 0)
     df['Published_in_EU'] = df['EU_Sales'].apply(lambda x: 1 if x > 0 else 0)
     df['Published_in_JP'] = df['JP_Sales'].apply(lambda x: 1 if x > 0 else 0)
@@ -42,10 +50,12 @@ def clean_data(df):
     
     df['Publisher'] = publisher_list
     df['User_Score'] = df['User_Score']*10
+    
+    df['Rating'] = map_generic(df, 'Rating')
     #read mapped file and replace publisher with their id. You may want to first convert the publisher into lower case and then 
     #write the id.
     # Saves dataframe to excel spreadsheet
-    df.to_excel("GameDataCleaned.xlsx")
+    df.to_excel(outputName)
 
 def map_publisher(df):
     #plug in the csv creation and header part here, publisher and corresponding ID, here you will have a csv writer object obj
@@ -95,8 +105,28 @@ def map_developer(df):
     #    obj.writerow([i,v])
     return dict_new
 
+def map_generic(df, column):
+    #plug in the csv creation and header part here, publisher and corresponding ID, here you will have a csv writer object obj
+    #df=pd.read_excel(CleanedData2.xlsx)
+    Generic=df[column].unique().tolist()
+    #publisher_new=[x.lower() for x in publisher]  #case sensitive
+    id_num=1
+    dict_new={}
+    for i in Generic:
+        if i not in dict_new:
+            dict_new[i]=id_num
+            id_num+=1
+    #at this point, you will have a mapped dictionary
+    #for i,v in dict_new.items():
+    #    obj.writerow([i,v])
+    generic_list = df[column].tolist()
+    for i in range(len(generic_list)):
+        generic_list[i] = dict_new[generic_list[i]]
+    return generic_list
+
 def main():
-    read_excel()
+    #read_excel('CleanedData2.xlsx', "GameDataCleaned.xlsx")
+    read_excel('TaggedDataUpdated.xlsx', 'NewGameDataCleaned.xlsx')
 
 if __name__ == "__main__":
     main()
